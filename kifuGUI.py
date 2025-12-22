@@ -2,11 +2,11 @@ import subprocess,time
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
-from kifu import bod_tolist as bod
-from kifu import kif_tolist as kif
-from kifu import list_tograph as graph
-from kifu import list_tograph_toryo as toryo
-from kifu import list_tograph_sanko as sanko
+from readBOD import bod_tolist as bod
+from readKIF import kif_tolist as kif
+from banmen import list_tograph as graph
+from banmenShiryozu import list_tograph_toryo as toryo
+from banmenSankozu import list_tograph_sanko as sanko
 
 files=[]
 
@@ -25,6 +25,10 @@ root.geometry("400x500")
 def create(event):
     output_file=''
     inputfile_2=files[0].split('/')
+    print("下記ファイルの盤面EPSを作成します")
+
+    saveDir = tkinter.filedialog.askdirectory(title="保存先を決めてください")
+
     print(inputfile_2[-1])
     #.bodの場合
     if ".bod" in files[0]:
@@ -39,14 +43,14 @@ def create(event):
         else:
             K=bod(files[0],EditBox_2.get())
             if combobox_syu.get()=="指始図":
-                input_file='図面データ/'+inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file='図面データ/'+inputfile_2[-1].replace('.bod','')+'.eps'
+                input_file = saveir + "/"+  inputfile_2[-1].replace('.bod','')+'.pdf'
+                output_file = saveDir +  "/" + inputfile_2[-1].replace('.bod','')+'.eps'
             elif combobox_syu.get()=="指了図":
-                input_file='図面データ/指了図_'+inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file='図面データ/指了図_'+inputfile_2[-1].replace('.bod','')+'.eps'
-            elif combobox_syu.get()=="参考図":
-                input_file='図面データ/参考図_'+inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file='図面データ/参考図_'+inputfile_2[-1].replace('.bod','')+'.eps'
+                input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','')+'.pdf'
+                output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','')+'.eps'
+            elif combobox_syu.get()=="/参考図":
+                input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','')+'.pdf'
+                output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','')+'.eps'
     #.kifの場合
     elif ".kif" in files[0]:
         if EditBox_2.get()=="" or EditBox_3.get()=="" or combobox_syu.get()=="":
@@ -63,14 +67,14 @@ def create(event):
             label_error.pack()
             return
         if combobox_syu.get()=="指始図":
-            input_file='図面データ/'+inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file='図面データ/'+inputfile_2[-1].replace('.kif','')+'.eps'
+            input_file = saveDir + "/" + inputfile_2[-1].replace('.kif','')+'.pdf'
+            output_file = saveDir + "/" + inputfile_2[-1].replace('.kif','')+'.eps'
         elif combobox_syu.get()=="指了図":
-            input_file='図面データ/指了図_'+inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file='図面データ/指了図_'+inputfile_2[-1].replace('.kif','')+'.eps'
+            input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','')+'.pdf'
+            output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','')+'.eps'
         elif combobox_syu.get()=="参考図":
-            input_file='図面データ/参考図_'+inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file='図面データ/参考図_'+inputfile_2[-1].replace('.kif','')+'_参考図.eps'
+            input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','')+'.pdf'
+            output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','')+'_参考図.eps'
         
     #sisizuを作成
     if combobox.get()=='先手':
@@ -90,7 +94,8 @@ def create(event):
             humenn=EditBox_2.get(),
             sisizu=str(Sisizu),
             sente_name=sentename.get(),
-            koute_name=gotename.get()
+            koute_name=gotename.get(),
+            savedir=saveDir
         )
     elif combobox_syu.get()=="指了図":
         toryo(
@@ -102,7 +107,8 @@ def create(event):
             humenn=EditBox_2.get(),
             sisizu=str(Sisizu),
             sente_name=sentename.get(),
-            koute_name=gotename.get()
+            koute_name=gotename.get(),
+            savedir=saveDir
         )
     elif combobox_syu.get()=="参考図":
         sanko(
@@ -114,17 +120,17 @@ def create(event):
             humenn=EditBox_2.get(),
             sisizu=str(Sisizu),
             sente_name=sentename.get(),
-            koute_name=gotename.get()
+            koute_name=gotename.get(),
+            savedir=saveDir
         )
     subprocess.run(["pdftops","-eps",input_file,output_file],shell=True)
-    label_rz['text']=u'\n:-0rz'
+    #label_rz['text']=u'\n:-0rz'
     
     time.sleep(5)
-    label_rz['text']=u'\n:-)rz'
+    #label_rz['text']=u'\n:-)rz'
     return
 
 def fileset(event):
-    label_rz['text']=u'\n:-)rz'
     file = tkinter.filedialog.askopenfilename(filetypes = fTyp,initialdir = iDir)
     EditBox_1.delete(0, tkinter.END)
     EditBox_1.insert(tkinter.END,file)
@@ -162,7 +168,7 @@ EditBox_2 = tkinter.Entry(width=60)
 EditBox_2.pack()
 
 #上部注意書き１ラベル
-label_tesu = tkinter.Label(text=u'第手目か数字で入力してください',width=60)
+label_tesu = tkinter.Label(text=u'何手目か数字で入力してください',width=60)
 label_tesu.pack()
 
 #上部注意書き１エントリー
@@ -203,8 +209,8 @@ Button_2.bind("<Button-1>",create)
 Button_2.pack()
 
 #ラベル
-fontStyle = tkFont.Font(family="Meiryo", size=15)
-label_rz = tkinter.Label(text=u'\n:-)rz',width=60,font=fontStyle)
-label_rz.pack()
+#fontStyle = tkFont.Font(family="Meiryo", size=15)
+#label_rz = tkinter.Label(text=u'\n:-)rz',width=60,font=fontStyle)
+#label_rz.pack()
 
 root.mainloop()
