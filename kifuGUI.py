@@ -1,4 +1,4 @@
-import subprocess,time
+import subprocess,time,datetime
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
@@ -17,12 +17,16 @@ with open(r'設定\初期フォルダ.txt','r') as r:
         iDir = line
 
 root = tkinter.Tk()
-root.title(u"棋譜データを描くやつ")
+root.title(u"棋譜盤面EPS作成")
 root.geometry("400x500")
 
 
 
 def create(event):
+
+    label_start=tkinter.Label(text=str(datetime.datetime.now())+':処理開始します')
+    label_start.pack()
+
     output_file=''
     inputfile_2=files[0].split('/')
     print("下記ファイルの盤面EPSを作成します")
@@ -43,7 +47,7 @@ def create(event):
         else:
             K=bod(files[0],EditBox_2.get())
             if combobox_syu.get()=="指始図":
-                input_file = saveir + "/"+  inputfile_2[-1].replace('.bod','')+'.pdf'
+                input_file = saveDir + "/"+  inputfile_2[-1].replace('.bod','')+'.pdf'
                 output_file = saveDir +  "/" + inputfile_2[-1].replace('.bod','')+'.eps'
             elif combobox_syu.get()=="指了図":
                 input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','')+'.pdf'
@@ -63,8 +67,8 @@ def create(event):
         try:
             K=kif(files[0],str(EditBox_tesu.get()))
         except IndexError:
-            label_error=tkinter.Label(text=u'※※手数の指定が対象データの記載範囲を超えています※※',fg='red')
-            label_error.pack()
+            label_indexError=tkinter.Label(text=u'※※手数の指定が対象データの記載範囲を超えています※※',fg='red')
+            label_indexError.pack()
             return
         if combobox_syu.get()=="指始図":
             input_file = saveDir + "/" + inputfile_2[-1].replace('.kif','')+'.pdf'
@@ -85,57 +89,85 @@ def create(event):
     Sisizu=sisizu_1+sisizu_2
     
     if combobox_syu.get()=="指始図":
-        graph(
-            filename=K[0],
-            dan=K[1],
-            koute_mochigoma=K[2],
-            sente_mochigoma=K[3],
-            tesuu=K[5],
-            humenn=EditBox_2.get(),
-            sisizu=str(Sisizu),
-            sente_name=sentename.get(),
-            koute_name=gotename.get(),
-            savedir=saveDir
-        )
+        try:
+            graph(
+                filename=K[0],
+                dan=K[1],
+                koute_mochigoma=K[2],
+                sente_mochigoma=K[3],
+                tesuu=K[5],
+                humenn=EditBox_2.get(),
+                sisizu=str(Sisizu),
+                sente_name=sentename.get(),
+                koute_name=gotename.get(),
+                savedir=saveDir
+                )
+        except(PermissionError):
+            permissionError()
+            return
     elif combobox_syu.get()=="指了図":
-        toryo(
-            filename=K[0],
-            dan=K[1],
-            koute_mochigoma=K[2],
-            sente_mochigoma=K[3],
-            tesuu=K[5],
-            humenn=EditBox_2.get(),
-            sisizu=str(Sisizu),
-            sente_name=sentename.get(),
-            koute_name=gotename.get(),
-            savedir=saveDir
-        )
+        try:
+            toryo(
+                filename=K[0],
+                dan=K[1],
+                koute_mochigoma=K[2],
+                sente_mochigoma=K[3],
+                tesuu=K[5],
+                humenn=EditBox_2.get(),
+                sisizu=str(Sisizu),
+                sente_name=sentename.get(),
+                koute_name=gotename.get(),
+                savedir=saveDir
+                )
+        except(PermissionError):
+            permissionError()
+            return
     elif combobox_syu.get()=="参考図":
-        sanko(
-            filename=K[0],
-            dan=K[1],
-            koute_mochigoma=K[2],
-            sente_mochigoma=K[3],
-            tesuu=K[5],
-            humenn=EditBox_2.get(),
-            sisizu=str(Sisizu),
-            sente_name=sentename.get(),
-            koute_name=gotename.get(),
-            savedir=saveDir
-        )
+        try:
+            sanko(
+                filename=K[0],
+                dan=K[1],
+                koute_mochigoma=K[2],
+                sente_mochigoma=K[3],
+                tesuu=K[5],
+                humenn=EditBox_2.get(),
+                sisizu=str(Sisizu),
+                sente_name=sentename.get(),
+                koute_name=gotename.get(),
+                savedir=saveDir
+                )
+        except(PermissionError):
+            permissionError()
+            return
+    
+    label_PDF=tkinter.Label(text=str(datetime.datetime.now())+':PDFファイル作成完了')
+    label_PDF.pack()
+    
     subprocess.run(["pdftops","-eps",input_file,output_file],shell=True)
-    #label_rz['text']=u'\n:-0rz'
+    label_EPS=tkinter.Label(text=str(datetime.datetime.now())+':EPSファイル作成完了')
+    label_EPS.pack()
     
     time.sleep(5)
-    #label_rz['text']=u'\n:-)rz'
+    
+    label_FIN=tkinter.Label(text=str(datetime.datetime.now())+':処理が終了しました')
+    label_FIN.pack()
+
     return
 
 def fileset(event):
     file = tkinter.filedialog.askopenfilename(filetypes = fTyp,initialdir = iDir)
     EditBox_1.delete(0, tkinter.END)
     EditBox_1.insert(tkinter.END,file)
+    files.clear()
     files.append(file)
     return 
+
+def permissionError():
+    label_permissionError1=tkinter.Label(text=str(datetime.datetime.now()),fg='red')
+    label_permissionError2=tkinter.Label(text='※※※同名のPDFファイルを開いていますので閉じるか、※※※\n※※※開いていない場合は少し待って※※※\n※※※再度作成ボタンを押してください※※※',fg='red')
+    label_permissionError1.pack()
+    label_permissionError2.pack()
+    return
 
 
 #上部注意書き１ラベル
@@ -207,10 +239,5 @@ EditBox_3.pack()
 Button_2 = tkinter.Button(text=u'PDF、EPSファイルを作成', width=25)
 Button_2.bind("<Button-1>",create)
 Button_2.pack()
-
-#ラベル
-#fontStyle = tkFont.Font(family="Meiryo", size=15)
-#label_rz = tkinter.Label(text=u'\n:-)rz',width=60,font=fontStyle)
-#label_rz.pack()
 
 root.mainloop()
