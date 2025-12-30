@@ -2,13 +2,14 @@ import subprocess,time,datetime
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 import tkinter.ttk as ttk
 import tkinter.font as tkFont
+from tkinter import scrolledtext
 from readBOD import bod_tolist as bod
 from readKIF import kif_tolist as kif
 from banmen import list_tograph as graph
 from banmenShiryozu import list_tograph_toryo as toryo
 from banmenSankozu import list_tograph_sanko as sanko
 
-files=[]
+files = []
 
 fTyp = [('kifファイル','*.kif'),('bodファイル','*.bod')] 
 
@@ -23,12 +24,12 @@ root.geometry("400x500")
 
 
 def create(event):
+    
+    start_text = str(datetime.datetime.now()) + ':処理開始します\n'
+    scrolltext.insert(tkinter.END,start_text)
 
-    label_start=tkinter.Label(text=str(datetime.datetime.now())+':処理開始します')
-    label_start.pack()
-
-    output_file=''
-    inputfile_2=files[0].split('/')
+    output_file = ''
+    inputfile_2 = files[0].split('/')
     print("下記ファイルの盤面EPSを作成します")
 
     saveDir = tkinter.filedialog.askdirectory(title="保存先を決めてください")
@@ -36,121 +37,134 @@ def create(event):
     print(inputfile_2[-1])
     #.bodの場合
     if ".bod" in files[0]:
-        
-        if EditBox_2.get()=="" or EditBox_3.get()=="" or combobox_syu.get()=="":
-            label_bodC=tkinter.Label(text=u'※※図面上部の記載事項が入力されていません※※',width=60)
-            label_bodC.pack()
+        if EditBox_2.get() == "" or EditBox_3.get() == "" or combobox_syu.get() == "":
+            error_text_1 = str(datetime.datetime.now()) + ':※※図面上部の記載事項が入力されていません※※\n'
+            scrolltext.insert(tkinter.END,error_text_1)
             return
-        elif EditBox_tesu.get()=="":
-            label_bodC=tkinter.Label(text=u'※※何手目か入力されていません※※',width=60)
-            label_bodC.pack()
+
+        elif EditBox_tesu.get() == "":
+            error_text_2 = str(datetime.datetime.now()) + ':※※何手目か入力されていません※※\n'
+            scrolltext.insert(tkinter.END,error_text_2)
+            return
+
         else:
-            K=bod(files[0],EditBox_2.get())
-            if combobox_syu.get()=="指始図":
-                input_file = saveDir + "/"+  inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file = saveDir +  "/" + inputfile_2[-1].replace('.bod','')+'.eps'
-            elif combobox_syu.get()=="指了図":
-                input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','')+'.eps'
-            elif combobox_syu.get()=="/参考図":
-                input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','')+'.pdf'
-                output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','')+'.eps'
+            K = bod(files[0],EditBox_2.get())
+            if combobox_syu.get() == "指始図":
+                input_file = saveDir + "/"+  inputfile_2[-1].replace('.bod','') + '.pdf'
+                output_file = saveDir +  "/" + inputfile_2[-1].replace('.bod','') + '.eps'
+            
+            elif combobox_syu.get() == "指了図":
+                input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','') + '.pdf'
+                output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.bod','') + '.eps'
+            
+            elif combobox_syu.get() == "/参考図":
+                input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','') + '.pdf'
+                output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.bod','') + '.eps'
+    
     #.kifの場合
     elif ".kif" in files[0]:
-        if EditBox_2.get()=="" or EditBox_3.get()=="" or combobox_syu.get()=="":
-            label_kifC=tkinter.Label(text=u'※※図面上部の記載事項が入力されていません※※',width=60)
-            label_kifC.pack()
+        if EditBox_2.get() == "" or EditBox_3.get() == "" or combobox_syu.get() == "":
+            error_text_3 = str(datetime.datetime.now()) + ':※※図面上部の記載事項が入力されていません※※\n'
+            scrolltext.insert(tkinter.END,error_text_3)
             return
-        elif  EditBox_tesu.get()=="":
-            label_kifC=tkinter.Label(text=u'※※指了図の盤面を出力します※※',width=60)
-            label_kifC.pack()
+        
+        elif  EditBox_tesu.get() == "":
+            error_text_4 = str(datetime.datetime.now()) + ':※※指了図の盤面を出力します※※\n'
+            scrolltext.insert(tkinter.END,error_text_4)
+
         try:
-            K=kif(files[0],str(EditBox_tesu.get()))
+            K = kif(files[0],str(EditBox_tesu.get()))
         except IndexError:
-            label_indexError=tkinter.Label(text=u'※※手数の指定が対象データの記載範囲を超えています※※',fg='red')
-            label_indexError.pack()
+            error_text_5 = str(datetime.datetime.now()) + ':\n※※手数の指定が対象データの記載範囲を超えています※※\n'
+            scrolltext.insert(tkinter.END,error_text_5)
             return
-        if combobox_syu.get()=="指始図":
-            input_file = saveDir + "/" + inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file = saveDir + "/" + inputfile_2[-1].replace('.kif','')+'.eps'
-        elif combobox_syu.get()=="指了図":
-            input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','')+'.eps'
-        elif combobox_syu.get()=="参考図":
-            input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','')+'.pdf'
-            output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','')+'_参考図.eps'
+
+        if combobox_syu.get() == "指始図":
+            input_file = saveDir + "/" + inputfile_2[-1].replace('.kif','') + '.pdf'
+            output_file = saveDir + "/" + inputfile_2[-1].replace('.kif','') + '.eps'
+        
+        elif combobox_syu.get() == "指了図":
+            input_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','') + '.pdf'
+            output_file = saveDir + '/指了図_' + inputfile_2[-1].replace('.kif','') + '.eps'
+        
+        elif combobox_syu.get() == "参考図":
+            input_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','') + '.pdf'
+            output_file = saveDir + '/参考図_' + inputfile_2[-1].replace('.kif','') + '_参考図.eps'
         
     #sisizuを作成
-    if combobox.get()=='先手':
-        sisizu_1='☗'
-    elif combobox.get()=='後手':
-        sisizu_1='☖'
-    sisizu_2=EditBox_3.get()
-    Sisizu=sisizu_1+sisizu_2
+    if combobox.get() == '先手':
+        sisizu_1 = '☗'
+    elif combobox.get() == '後手':
+        sisizu_1 = '☖'
+    sisizu_2 = EditBox_3.get()
+    Sisizu = sisizu_1 + sisizu_2
     
-    if combobox_syu.get()=="指始図":
+    if combobox_syu.get() == "指始図":
         try:
             graph(
-                filename=K[0],
-                dan=K[1],
-                koute_mochigoma=K[2],
-                sente_mochigoma=K[3],
-                tesuu=K[5],
-                humenn=EditBox_2.get(),
-                sisizu=str(Sisizu),
-                sente_name=sentename.get(),
-                koute_name=gotename.get(),
-                savedir=saveDir
+                filename = K[0],
+                dan = K[1],
+                koute_mochigoma = K[2],
+                sente_mochigoma = K[3],
+                tesuu = K[5],
+                humenn = EditBox_2.get(),
+                sisizu = str(Sisizu),
+                sente_name = sentename.get(),
+                koute_name = gotename.get(),
+                savedir = saveDir
                 )
         except(PermissionError):
             permissionError()
             return
-    elif combobox_syu.get()=="指了図":
+    
+    elif combobox_syu.get() == "指了図":
         try:
             toryo(
-                filename=K[0],
-                dan=K[1],
-                koute_mochigoma=K[2],
-                sente_mochigoma=K[3],
-                tesuu=K[5],
-                humenn=EditBox_2.get(),
-                sisizu=str(Sisizu),
-                sente_name=sentename.get(),
-                koute_name=gotename.get(),
-                savedir=saveDir
+                filename = K[0],
+                dan = K[1],
+                koute_mochigoma = K[2],
+                sente_mochigoma = K[3],
+                tesuu = K[5],
+                humenn = EditBox_2.get(),
+                sisizu = str(Sisizu),
+                sente_name = sentename.get(),
+                koute_name = gotename.get(),
+                savedir = saveDir
                 )
         except(PermissionError):
             permissionError()
             return
-    elif combobox_syu.get()=="参考図":
+    
+    elif combobox_syu.get() == "参考図":
         try:
             sanko(
-                filename=K[0],
-                dan=K[1],
-                koute_mochigoma=K[2],
-                sente_mochigoma=K[3],
-                tesuu=K[5],
-                humenn=EditBox_2.get(),
-                sisizu=str(Sisizu),
-                sente_name=sentename.get(),
-                koute_name=gotename.get(),
-                savedir=saveDir
+                filename = K[0],
+                dan = K[1],
+                koute_mochigoma = K[2],
+                sente_mochigoma = K[3],
+                tesuu = K[5],
+                humenn = EditBox_2.get(),
+                sisizu = str(Sisizu),
+                sente_name = sentename.get(),
+                koute_name = gotename.get(),
+                savedir = saveDir
                 )
         except(PermissionError):
             permissionError()
             return
     
-    label_PDF=tkinter.Label(text=str(datetime.datetime.now())+':PDFファイル作成完了')
-    label_PDF.pack()
+    text_pdf = str(datetime.datetime.now()) + ':PDFファイル作成完了\n'
+    scrolltext.insert(tkinter.END, text_pdf)
     
     subprocess.run(["pdftops","-eps",input_file,output_file],shell=True)
-    label_EPS=tkinter.Label(text=str(datetime.datetime.now())+':EPSファイル作成完了')
-    label_EPS.pack()
+    
+    text_eps = str(datetime.datetime.now()) + ':EPSファイル作成完了\n'
+    scrolltext.insert(tkinter.END, text_eps)
     
     time.sleep(5)
     
-    label_FIN=tkinter.Label(text=str(datetime.datetime.now())+':処理が終了しました')
-    label_FIN.pack()
+    text_FIN = str(datetime.datetime.now()) + ':処理が終了しました\n'
+    scrolltext.insert(tkinter.END, text_FIN)
 
     return
 
@@ -163,10 +177,10 @@ def fileset(event):
     return 
 
 def permissionError():
-    label_permissionError1=tkinter.Label(text=str(datetime.datetime.now()),fg='red')
-    label_permissionError2=tkinter.Label(text='※※※同名のPDFファイルを開いていますので閉じるか、※※※\n※※※開いていない場合は少し待って※※※\n※※※再度作成ボタンを押してください※※※',fg='red')
-    label_permissionError1.pack()
-    label_permissionError2.pack()
+    text_permissionError1 = str(datetime.datetime.now()) + '\n' 
+    scrolltext.insert(tkinter.END, text_permissionError1)
+    text_permissionError2 = '※※※同名のPDFファイルを開いていますので閉じるか※※※\n※※※開いていない場合は少し待って※※※\n※※※再度作成ボタンを押してください※※※\n'
+    scrolltext.insert(tkinter.END, text_permissionError2)
     return
 
 
@@ -239,5 +253,9 @@ EditBox_3.pack()
 Button_2 = tkinter.Button(text=u'PDF、EPSファイルを作成', width=25)
 Button_2.bind("<Button-1>",create)
 Button_2.pack()
+
+#スクロールテキスト
+scrolltext = scrolledtext.ScrolledText(padx=20, pady=25, cursor='arrow', wrap=tkinter.WORD, font=('Helvetica', '9'))
+scrolltext.pack(fill=tkinter.BOTH, expand=1)
 
 root.mainloop()
