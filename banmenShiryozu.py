@@ -3,6 +3,9 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 komafont = {'玉':'0','金':'1','銀':'2','桂':'3','香':'4','飛':'5','角':'6','歩':'7','と':'a','全':'b','圭':'c','杏':'d','龍':'e','馬':'f'}
 
+# 駒フォントの設定（変更する場合はここを編集してください）
+KOMA_FONT = 'syogi'
+
 #######################################################
 ########　指了図盤面グラフィック作成用関数　　#########
 ########　pdfでグラフの描画データを出力   　　#########
@@ -184,68 +187,68 @@ def list_tograph_toryo(
 
             if dan[k][i][0] == 'v' and dan[k][i][1] == '杏':
                 moji = komafont['杏']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
             elif dan[k][i][0] != 'v' and dan[k][i][0] == '杏':
                 moji = komafont['杏']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
                 
             elif dan[k][i][0] == 'v' and dan[k][i][1] == '圭':
                 moji = komafont['圭']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
             elif dan[k][i][0] != 'v' and dan[k][i][0] == '圭':
                 moji = komafont['圭']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
             
             elif dan[k][i][0] == 'v' and dan[k][i][1] == '全':
                 moji = komafont['全']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
             elif dan[k][i][0] != 'v' and dan[k][i][0] == '全':
                 moji = komafont['全']
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
             
             
             elif dan[k][i][0] == 'v' and dan[k][i][1] != '香':
                 if dan[k][i][0] == 'v' and dan[k][i][1] == '龍':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] == 'v' and dan[k][i][1] == '歩':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] == 'v' and dan[k][i][1] == '馬':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] == 'v' and dan[k][i][1] == '角':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] == 'v' and dan[k][i][1] == '桂':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
                 
                 else:
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
             
             
             elif dan[k][i][0] != 'v' and dan[k][i][0] != '香':
                 if dan[k][i][0] != 'v' and dan[k][i][0] == '龍':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] != 'v' and dan[k][i][0] == '歩':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] != 'v' and dan[k][i][0] == '馬':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] != 'v' and dan[k][i][0] == '角':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
                 
                 elif dan[k][i][0] != 'v' and dan[k][i][0] == '桂':
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10',fontweight=1000,family=KOMA_FONT)
                 
                 else:
-                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                    ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
             
             
             else:
-                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family='syogi')
+                ax.text(i + 1.5,y,moji, ha='center',va='center',rotation=rot,fontsize='10.5',fontweight=1000,family=KOMA_FONT)
         
         y -= 1 
     

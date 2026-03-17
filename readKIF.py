@@ -34,7 +34,7 @@ def kif_tolist(filename,humen=''):
     kifu = kifu.replace('\u3000', '')
     
     sashite = [x.groups()[0] 
-        for x in re.finditer('^\s*[0-9]+\s+(\S+).*$', 
+        for x in re.finditer(r'^\s*[0-9]+\s+(\S+).*$', 
         kifu, 
         flags=re.MULTILINE)]
     
@@ -63,7 +63,7 @@ def kif_tolist(filename,humen=''):
     for i, each_sashite in enumerate(sashite):
         #駒を動かすときの処理
         if each_sashite[-1] != '打': 
-            move = re.match('^(\d+)(\D+)\((\d+).*$', each_sashite).groups()
+            move = re.match(r'^(\d+)(\D+)\((\d+).*$', each_sashite).groups()
             after_x = 9 - int(move[0][0])
             after_y = int(move[0][1]) - 1 
             before_x = 9 - int(move[2][0])
