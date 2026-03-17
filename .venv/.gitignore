@@ -4,5 +4,5 @@ _pycache__/
 .venv/include/
 .venv/Lib/
 .venv/Scripts/
-.venv/Share/
+.venv/share/
 .venv/pyvenv.cfg
